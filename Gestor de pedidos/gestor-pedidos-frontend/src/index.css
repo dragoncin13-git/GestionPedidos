@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Leaflet core styles */
+@import url('leaflet/dist/leaflet.css');
+/* Bree Serif font (global) */
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap');
+
+:root {
+  --bg: #1b1525;
+  --card: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --radius: 22px;
+  --blur: blur(18px);
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Bree Serif', serif;
+  color: white;
+}
+
+.card {
+  background: var(--card);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+}

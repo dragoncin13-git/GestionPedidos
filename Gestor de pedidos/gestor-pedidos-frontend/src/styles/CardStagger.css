@@ -1,0 +1,25 @@
+.card-stagger {
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  filter: blur(6px);
+  animation: cardFadeUp 0.8s ease forwards;
+}
+
+@keyframes cardFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+
+.card-1 { animation-delay: 0.15s; }
+.card-2 { animation-delay: 0.30s; }
+.card-3 { animation-delay: 0.45s; }
+.card-4 { animation-delay: 0.60s; }
