@@ -1,4 +1,7 @@
+// src/services/orders.service.ts
 import prisma from "../prismaClient";
+import { STATUS_MAP } from "../constants/orderStatus";
+import { OrderStatus } from "@prisma/client";
 
 type OrderItemInput = { productId: number; quantity: number; };
 
@@ -82,6 +85,31 @@ export async function findById(id: number) {
   });
   if (!order) throw new Error("Orden no encontrada");
   return order;
+}
+
+/**
+ * updateStatus:
+ * - busca el mapeo string -> valor aceptado por Prisma (STATUS_MAP)
+ * - valida que exista
+ * - fuerza un cast a OrderStatus para satisfacer la firma de prisma
+ */
+export async function updateStatus(id: number, status: string) {
+  const mappedStr = STATUS_MAP[status]; // puede venir "RECEIVED" etc (string)
+  if (!mappedStr) {
+    throw new Error("Estado inválido: " + status);
+  }
+
+  // Forzamos el tipo a OrderStatus para Prisma (safe porque STATUS_MAP solo contiene valores válidos)
+  const mapped = mappedStr as unknown as OrderStatus;
+
+  return prisma.order.update({
+    where: { id },
+    data: { status: mapped },
+    include: {
+      items: { include: { product: true } },
+      user: true,
+    },
+  });
 }
 
 export async function findByUser(userId: number) {

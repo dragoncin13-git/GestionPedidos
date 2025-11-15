@@ -9,6 +9,10 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*", "src/prisma", "prisma"],
+  "include": [
+    "src/**/*",
+    "prisma",
+    "prissrc/prisma"
+, "src/constants", "../prisma"  ],
   "exclude": ["node_modules", "dist"]
 }

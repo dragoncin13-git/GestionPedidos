@@ -108,7 +108,7 @@ export default function Login() {
           </p>
 
           <p className="login-links">
-            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+            {/* <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link> */}
           </p>
         </form>
       </div>

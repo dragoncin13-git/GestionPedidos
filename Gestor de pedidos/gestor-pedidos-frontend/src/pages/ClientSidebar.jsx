@@ -56,14 +56,7 @@ export default function ClientSidebar() {
           Mis pedidos
         </NavLink>
 
-        <NavLink
-          to="/client/account"
-          className={({ isActive }) =>
-            `${linkBase} ${isActive ? linkActive : linkInactive}`
-          }
-        >
-          Mi cuenta
-        </NavLink>
+        {/* 🔥 ELIMINADO "Mi cuenta" */}
 
         <Link
           to="/client/history"
@@ -72,15 +65,14 @@ export default function ClientSidebar() {
           Historial
         </Link>
       </nav>
-      {/* Carrito */}
-<Link
-  to="/client/cart"
-  className="block px-4 py-2 mt-4 rounded-xl text-center font-medium bg-purple-600 hover:bg-purple-700 transition"
->
-  🛒 Ver carrito (
-  {JSON.parse(localStorage.getItem("cart") || "[]").length}
-  )
-</Link>
+
+      {/* Carrito - 🔥 SIMPLIFICADO */}
+      <Link
+        to="/client/cart"
+        className="block px-4 py-2 mt-4 rounded-xl text-center font-medium bg-purple-600 hover:bg-purple-700 transition"
+      >
+        Ver carrito
+      </Link>
 
       {/* Logout */}
       <button
