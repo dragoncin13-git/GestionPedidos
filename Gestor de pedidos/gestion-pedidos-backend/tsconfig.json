@@ -11,7 +11,7 @@
   },
   "include": [
     "src/**/*",
-    "prisma",
+    "src/prisma",
     "prissrc/prisma"
 , "src/constants", "../prisma"  ],
   "exclude": ["node_modules", "dist"]
