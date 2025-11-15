@@ -16,6 +16,7 @@
     "@chakra-ui/react": "^3.29.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@react-google-maps/api": "^2.20.7",
     "axios": "^1.13.2",
     "framer-motion": "^12.23.24",
     "jwt-decode": "^4.0.0",

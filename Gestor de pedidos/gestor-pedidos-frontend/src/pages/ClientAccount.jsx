@@ -1,5 +1,6 @@
+// src/pages/ClientAccount.jsx
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/api";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function ClientAccount() {
@@ -19,18 +20,20 @@ export default function ClientAccount() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put("http://localhost:3000/users/update", user, {
+      const res = await api.put("/users/update", user, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      const updatedUser = res.data.user || res.data;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
       setMessage("✅ Cambios guardados correctamente");
-      localStorage.setItem("user", JSON.stringify(res.data.user));
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       console.error(err);
-      if (err.response?.status === 409)
-        setMessage("⚠️ Correo o teléfono ya están en uso");
+      if (err?.response?.status === 409) setMessage("⚠️ Correo o teléfono ya están en uso");
       else setMessage("❌ Error al guardar cambios");
+      setTimeout(() => setMessage(""), 3000);
     }
   };
 

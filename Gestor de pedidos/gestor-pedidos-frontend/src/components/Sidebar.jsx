@@ -50,6 +50,7 @@ export default function Sidebar() {
         >
           Dashboard
         </NavLink>
+
         <NavLink
           to="/products"
           className={({ isActive }) =>
@@ -58,14 +59,26 @@ export default function Sidebar() {
         >
           Products
         </NavLink>
-        <NavLink
-          to="/orders"
-          className={({ isActive }) =>
-            `${linkBase} ${isActive ? linkActive : linkInactive}`
-          }
-        >
-          Orders
-        </NavLink>
+
+<NavLink
+  to="/admin/orders"
+  className={({ isActive }) =>
+    `${linkBase} ${isActive ? linkActive : linkInactive}`
+  }
+>
+  Orders
+</NavLink>
+
+<NavLink
+  to="/admin/history"
+  className={({ isActive }) =>
+    `${linkBase} ${isActive ? linkActive : linkInactive}`
+  }
+>
+  Historial
+</NavLink>
+
+
         <NavLink
           to="/products/create"
           className={({ isActive }) =>

@@ -5,12 +5,14 @@ import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 
 import ClientSidebar from "./pages/ClientSidebar";
+import ClientOrderDetail from "./pages/ClientOrderDetail";
 import ClientAccount from "./pages/ClientAccount";
 import ClientHistory from "./pages/ClientHistory";
 import ClientOrders from "./pages/ClientOrders";
 import ClientCart from "./pages/ClientCart";
 import ClientProducts from "./pages/ClientProducts";
 import Home from "./pages/Home";
+import AdminHistory from "./pages/AdminHistory";
 import Orders from "./pages/Orders";
 import Products from "./pages/Products";
 import ProductCreate from "./pages/ProductCreate";
@@ -66,8 +68,8 @@ function Layout() {
   return (
     <div className="flex bg-[#1b1525] text-white min-h-screen">
       <div>
-  {isAdmin ? <Sidebar /> : <ClientSidebar />}
-</div>
+        {isAdmin ? <Sidebar /> : <ClientSidebar />}
+      </div>
 
       <main className="flex-1 p-0 sm:p-8">
         <Navbar onMenuToggle={() => setMobileMenuOpen(true)} />
@@ -104,23 +106,39 @@ function Layout() {
             <Route path="/products/:id" element={<PrivateRoute role="admin"><ProductDetail /></PrivateRoute>} />
             <Route path="/admin/orders" element={<PrivateRoute role="admin"><Orders /></PrivateRoute>} />
             <Route path="/admin/orders/:id" element={<PrivateRoute role="admin"><OrderDetail /></PrivateRoute>} />
+            <Route
+              path="/admin/history"
+              element={
+                <PrivateRoute role="admin">
+                  <AdminHistory />
+                </PrivateRoute>
+              }
+            />
 
             {/* --- CLIENTE --- */}
             <Route path="/client/products" element={
               <PrivateRoute>
-                <ClientProducts />   {/* 🛒 Muestra los productos */}
+                <ClientProducts />
               </PrivateRoute>
             } />
             <Route path="/client/orders" element={
               <PrivateRoute>
-                <ClientOrders />     {/* 📦 Muestra los pedidos */}
+                <ClientOrders />
               </PrivateRoute>
             } />
             <Route path="/client/cart" element={
-  <PrivateRoute>
-    <ClientCart />
-  </PrivateRoute>
-} />
+              <PrivateRoute>
+                <ClientCart />
+              </PrivateRoute>
+            } />
+            <Route
+              path="/client/orders/:id"
+              element={
+                <PrivateRoute>
+                  <ClientOrderDetail />
+                </PrivateRoute>
+              }
+            />
 
             <Route path="/client/account" element={<PrivateRoute><ClientAccount /></PrivateRoute>} />
             <Route path="/client/history" element={<ClientHistory />} />

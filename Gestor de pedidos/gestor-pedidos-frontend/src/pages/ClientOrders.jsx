@@ -9,6 +9,7 @@ export default function ClientOrders() {
   const [activeOrder, setActiveOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const filteredOrders = orders.filter(order => order.status !== "DELIVERED");
 
   // 🔹 Nueva función para reutilizar en varios puntos
   const fetchOrders = async () => {
@@ -100,7 +101,7 @@ setActiveOrder(active || null);
             Aún no has realizado ningún pedido.
           </div>
         ) : (
-          orders.map((order) => (
+          filteredOrders.map((order) => (
             <div
               key={order.id}
               className="card p-6 flex flex-col justify-between border border-white/10 hover:border-purple-400/30 transition"
@@ -140,33 +141,14 @@ setActiveOrder(active || null);
                   </span>
                 </div>
               </div>
-
-              {/* 🔹 Botón dinámico: Marcar recibido o mostrar recibido */}
-              <div className="mt-4">
-                {["pendiente", "pending", "en proceso", "processing"].includes(
-                  order.status?.toLowerCase()
-                ) ? (
-                  <button
-                    onClick={async () => {
-                      try {
-                        await api.put(`/orders/${order.id}/received`, undefined, {
-                          headers: { Authorization: `Bearer ${token}` },
-                        });
-                        window.dispatchEvent(new Event("refreshOrders"));
-                      } catch (err) {
-                        console.error("❌ Error al marcar recibido:", err);
-                      }
-                    }}
-                    className="block w-full text-center px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:brightness-110 transition text-sm font-medium"
-                  >
-                    Marcar como recibido
-                  </button>
-                ) : (
-                  <div className="text-center text-green-400 font-medium animate-pulse">
-                    ✔ Recibido
-                  </div>
-                )}
-              </div>
+              
+              {/* 🔥 SOLO BOTÓN "VER DETALLES" - ELIMINADO "MARCAR COMO RECIBIDO" */}
+              <Link
+                to={`/client/orders/${order.id}`}
+                className="mt-4 block w-full text-center px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 hover:brightness-110 transition text-sm font-medium"
+              >
+                Ver detalles
+              </Link>
             </div>
           ))
         )}

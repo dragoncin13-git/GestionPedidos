@@ -5,6 +5,9 @@ import * as ordersController from "../controllers/orders.controller";
 
 const router = express.Router();
 
+// 🟣 Nuevo endpoint para actualizar estado
+router.patch("/:id", authenticate, ordersController.updateOrderStatus);
+
 // 🟢 Crear pedido
 router.post("/", authenticate, ordersController.createOrder);
 
@@ -17,7 +20,7 @@ router.get("/", authenticate, ordersController.listOrders);
 // 🟢 Obtener pedido por ID
 router.get("/:id", authenticate, ordersController.getOrder);
 
-// 🟢 Marcar pedido como recibido
+// 🟢 Marcar pedido como recibido (cliente)
 router.put("/:id/received", authenticate, async (req: AuthRequest, res) => {
   try {
     const id = Number(req.params.id);

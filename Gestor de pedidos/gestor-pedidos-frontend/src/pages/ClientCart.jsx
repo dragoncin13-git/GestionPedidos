@@ -1,3 +1,4 @@
+// src/pages/ClientCart.jsx
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../api/api";
 import { useState, useEffect } from "react";
@@ -5,38 +6,32 @@ import { useState, useEffect } from "react";
 export default function ClientCart() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cart, setCart] = useState(location.state?.cart || []);
-
-  // 🧠 Cargar carrito desde localStorage si no viene del estado
-  useEffect(() => {
-    if (!location.state?.cart) {
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
+  const [cart, setCart] = useState(() => {
+    const fromState = location.state?.cart;
+    if (fromState) {
+      localStorage.setItem("cart", JSON.stringify(fromState));
+      return fromState;
     }
-  }, [location.state]);
+    const saved = localStorage.getItem("cart");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  // 💾 Guardar automáticamente en localStorage cada vez que cambie el carrito
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    // sincroniza si otro tab cambia el localStorage
+    const handler = () => {
+      const saved = localStorage.getItem("cart");
+      setCart(saved ? JSON.parse(saved) : []);
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
 
-  // 🗑 Eliminar producto (versión completa y persistente)
-  const removeFromCart = (productId) => {
-    const newCart = cart.filter((item) => item.id !== productId);
-    setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart)); // 🔥 guarda los cambios
-  };
-
-  // 🗑 Tu versión original (mantengo pero actualizo para persistir)
   const removeItem = (id) => {
-    const updatedCart = cart.filter((item) => item.id !== id);
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart)); // ✅ ahora también persiste
+    const newCart = cart.filter((item) => item.id !== id);
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
-  // ✅ Confirmar pedido
   const confirmOrder = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -46,11 +41,10 @@ export default function ClientCart() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("✅ Pedido confirmado");
-
-      // 🔥 Limpia el carrito del estado y del localStorage
       setCart([]);
       localStorage.removeItem("cart");
-
+      // avisar a otras vistas para refrescar (ej. mis pedidos)
+      window.dispatchEvent(new Event("refreshOrders"));
       navigate("/client/orders");
     } catch (err) {
       console.error("❌ Error confirmando pedido:", err);
@@ -60,36 +54,38 @@ export default function ClientCart() {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">🛍 Mi Carrito</h2>
+      <h2 className="text-2xl font-bold mb-4">Mi Carrito</h2>
       {cart.length === 0 ? (
         <p>El carrito está vacío</p>
       ) : (
         <>
           <ul className="space-y-4">
             {cart.map((item) => (
-              <li
-                key={item.id}
-                className="flex justify-between items-center border p-3 rounded-lg"
-              >
-                <span>
-                  {item.name} x {item.quantity}
-                </span>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
-                >
-                  Eliminar
-                </button>
+              <li key={item.id} className="flex justify-between items-center border p-3 rounded-lg">
+                <div>
+                  <div className="font-medium">{item.name}</div>
+                  <div className="text-sm opacity-70">Cantidad: {item.quantity}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="font-semibold">${(item.price * item.quantity).toFixed(2)}</div>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
-
-          <button
-            onClick={confirmOrder}
-            className="mt-5 bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700"
-          >
-            Confirmar pedido
-          </button>
+          <div className="mt-4 text-right">
+            <button
+              onClick={confirmOrder}
+              className="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700"
+            >
+              Confirmar pedido
+            </button>
+          </div>
         </>
       )}
     </div>

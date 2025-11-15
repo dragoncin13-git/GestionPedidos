@@ -3,6 +3,24 @@ import asyncHandler from "express-async-handler";
 import * as ordersService from "../services/orders.service";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
+// 🟣 PATCH /orders/:id — actualizar estado (ADMIN)
+export const updateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const orderId = Number(req.params.id);
+    const { status } = req.body;
+
+    console.log("STATUS RECIBIDO DESDE FRONT:", status);
+
+    const updatedOrder = await ordersService.updateStatus(orderId, status);
+
+    return res.json(updatedOrder);
+
+  } catch (error: any) {
+    console.error("ERROR en updateOrderStatus:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const createOrder = asyncHandler(async (req: AuthRequest, res: Response): Promise<void> => {
   const userId = Number(req.user?.id);
   const { items } = req.body;
